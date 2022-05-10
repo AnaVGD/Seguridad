@@ -13,11 +13,6 @@ import sys
 def inicio():
   byte1 = input('Primer byte: ')
   byte2 = input('Segundo  byte: ')
-  # byte1 = bin(int('10111101', 2))[2:].zfill(8)
-  # byte2 = bin(int('00100101', 2))[2:].zfill(8)
-  byte1 = '57'
-  byte2 = '83'
-  # print(byte1, byte2)
   byte1 = (bin(int(byte1, 16))[2:]).zfill(8)
   byte2 = (bin(int(byte2, 16))[2:]).zfill(8)
   correct = False
@@ -36,27 +31,31 @@ def inicio():
 
   doit(byte1, byte2, altg)
   
-  
+
+# Paso el primer byte, el segundo byte y el bit A9 o 1B
+# primero recorro el byte 2 y cuando sea igual a uno llamo a la función separar que me devolver un
+# string con los bits separados y esto lo guardo en el vector separbits, luego recorro este vector pero 
+# compruebo que las ultimas posiciones de los bits que están en el vector sea uno, si lo es en el vector resultado 
+# guardo el bit tal cual, en caso contrario llamo a la función desplazamiento que calculara el desplazamiento del bit dependiendo
+# del bit del algoritmo.
 def doit(byte1, byte2, algort):
   separbits = []
   resultados = []
-  # print(byte2)
   for i in reversed(range(len(byte2))):
     if(byte2[i] == '1'): 
-      # print('hi')
-      # print(separar(i))
       separbits.append(separar(i))
-  # print(separbits)
-  # print(byte1, byte2)
   for i in range(len(separbits)):
     if separbits[i][7] == "1": # 00000001
       resultados.append(byte1)
     else:
       print('\nPasos de la operacion', byte1, 'x', separbits[i])
       resultados.append(desplazamiento(byte1, separbits[i], algort))
-
-  print("\nOperacion", resultados)
-    
+      
+      
+  print("\nOperacion")
+  for i in range(len(resultados) -1):
+    print(resultados[i] + ' + ', end='')
+  print(resultados[len(resultados) - 1])
   result = 0
   for i in range(len(resultados)):
     result ^= int(resultados[i], 2)
@@ -65,9 +64,10 @@ def doit(byte1, byte2, algort):
   print('Segundo byte: ' + byte2)
   print('Byte Algoritmo: ' + algort)
   print("Multiplicación = " + bin(result)[2:].zfill(8))
-      
+
+# Separa los bits si es 100010 devuelve 000010
+# se le pasa la posición donde se encuentra el uno
 def separar(one):
-  # print('hi')
   stringByte = ''
   for i in range(8):
     if (i != one):
@@ -76,6 +76,9 @@ def separar(one):
       stringByte += '1'
   return stringByte
 
+# Calcula el desplazamiento, comprueba la posición del 1, luego calcula el desplazamiento
+# comprueba si la primera posición es 1 en ese caso se le suma el bit del algorito en caso contrario se desplaza
+# lo que le corresponde.
 def desplazamiento(byte1, byte2, algort):
   # print(byte2)
   desplazamiento = 0
@@ -84,9 +87,7 @@ def desplazamiento(byte1, byte2, algort):
       desplazamiento = i
       break
 
-  # print(desplazamiento)
   desplazamiento = 7 - desplazamiento
-  # print(desplazamiento)
   valor = byte1
   iteracion = 0
   
@@ -106,4 +107,3 @@ def desplazamiento(byte1, byte2, algort):
   return valor
   
 inicio()
-# doit()
